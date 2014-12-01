@@ -127,3 +127,4 @@ If you already have run `../vendor/bin/codecept build` for each application, you
 
 You also can adjust you application suite configs and `_bootstrap.php` settings to use other urls and files, as it is can be done in `yii2-basic`.
 Current template also includes [yii2-faker](https://github.com/yiisoft/yii2/tree/master/extensions/faker) extension, that is correctly setup for each application tier.
+
