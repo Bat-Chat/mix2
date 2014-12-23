@@ -77,7 +77,6 @@ class CronController extends Controller {
                 $newLog->executed_times = $task->done;
                 $newLog->save();
 
-
                 $task->done = 0;
                 $task->save();
             }
