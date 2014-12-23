@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\Task;
+use common\models\TasksLog;
 use common\models\TaskSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -14,6 +15,19 @@ use yii\filters\VerbFilter;
  */
 class TaskController extends Controller
 {
+
+    // полное время задачи
+    public $fullTime = null;
+
+    // оставшиеся время задачи
+    public $leftTime = null;
+
+    // пройденное время задачи
+    public $passTime = null;
+
+    // процент пройденного времени задачи
+    public $rateTime = null;
+
     public function behaviors()
     {
         return [
@@ -42,16 +56,112 @@ class TaskController extends Controller
     }
 
     /**
+     * Lists all Task models.
+     * @return mixed
+     */
+    public function getExecutionPercent(Task $task)
+    {
+        return (1/$task->number_of_executions)*100;
+    }
+
+    /**
+     * Lists all Task models.
+     * @return mixed
+     */
+    public function setDay()
+    {
+        $this->setTime(strtotime(date('Y-m-d')), strtotime('+1 day', strtotime(date('Y-m-d'))));
+    }
+
+    /**
+     * Lists all Task models.
+     * @return mixed
+     */
+    public function setWeek()
+    {
+        $this->setTime(strtotime('Monday this week', time()), strtotime('next Monday', time()));
+    }
+
+    /**
+     * Lists all Task models.
+     * @return mixed
+     */
+    public function setMonth()
+    {
+        $this->setTime(strtotime('first day of this Month', strtotime(date('Y-m-d'))), strtotime('first day of next Month', strtotime(date('Y-m-d'))));
+    }
+
+    /**
+     * Lists all Task models.
+     * @return mixed
+     */
+    public function setTime($start, $end)
+    {
+        $this->fullTime = $end - $start;
+        $this->passTime = time() - $start;
+        $this->leftTime = $end - time();
+        $this->rateTime = bcmul(bcdiv($this->passTime, $this->fullTime, 3), 100, 1);
+    }
+
+    /**
+     * Lists all Task models.
+     * @return mixed
+     */
+    public function setTimeByInterval($intervalId)
+    {
+        date_default_timezone_set('Europe/Helsinki');
+
+        switch ($intervalId) {
+            case 1:
+                return 1;
+                break;
+            case 2:
+                $this->setDay();
+                break;
+            case 3:
+                $this->setWeek();
+                break;
+            case 4:
+                $this->setMonth();
+                break;
+            case 5:
+                return (86400/604800)*100;
+                break;
+            default:
+                return 0;
+        }
+
+        // echo '<br>';
+        // echo $this->fullTime;
+        // echo '<br>';
+        // echo $this->passTime;
+        // echo '<br>';
+        // echo $this->rateTime;die;
+
+        // echo date('Y-m-d G:i:s', time());
+        // echo '<br>';
+        // echo date('Y-m-d G:i:s', strtotime("+5 minutes",$e));die;
+    }
+
+    /**
      * Displays a single Task model.
      * @param integer $id
      * @return mixed
      */
     public function actionView($id)
-    {
+    {       
+        $task = $this->findModel($id);
+
+        if ($task->interval_id) {
+           $this->setTimeByInterval($task->interval_id);
+        }
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $task
         ]);
     }
+
+    
 
     /**
      * Creates a new Task model.

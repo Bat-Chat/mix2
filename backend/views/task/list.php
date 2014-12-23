@@ -9,12 +9,8 @@ use yii\grid\GridView;
 
 $this->title = Yii::t('app', 'Tasks');
 $this->params['breadcrumbs'][] = $this->title;
+?>
 
-?>
-<?php $this->registerJs("
-$('.dial').knob();",
-yii\web\View::POS_READY); 
-?>
 <div class="task-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
@@ -25,8 +21,6 @@ yii\web\View::POS_READY);
     'modelClass' => 'Task',
 ]), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
-    <input type="text" value="75" class="dial">
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

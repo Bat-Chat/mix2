@@ -16,7 +16,7 @@ class m140827_193026_createTableTask extends Migration
             'id' => Schema::TYPE_PK,
             'title' => Schema::TYPE_STRING . ' NOT NULL',
             'description' => Schema::TYPE_TEXT . ' NOT NULL',
-            'done' => Schema::TYPE_BOOLEAN . ' DEFAULT FALSE',
+            'done' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
         ], $tableOptions);
     }
 

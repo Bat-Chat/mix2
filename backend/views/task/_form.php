@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\models\Interval;
+use yii\helpers\ArrayHelper;
 use dosamigos\datepicker\DatePicker;
 
 /* @var $this yii\web\View */
@@ -21,20 +23,22 @@ use dosamigos\datepicker\DatePicker;
 
 		<?= $form->field($model, 'number_of_executions')->textInput() ?>
 
-		<?= $form->field($model, 'interval')->dropDownList(
-				$model->intervalValues,
-				['prompt'=>'Select interval']
+		<?= $form->field($model, 'interval_id')->dropDownList(
+			ArrayHelper::map(Interval::find()->all(), 'id', 'title'),
+			['prompt'=>'Select interval']
 		);?>
 
-		<?= DatePicker::widget([
-			'model' => $model,
-			'attribute' => 'start_date',
-			'template' => '{addon}{input}',
-					'clientOptions' => [
-							'autoclose' => true,
-							'format' => 'dd-M-yyyy'
-					]
-	]);?>
+		<?
+			// DatePicker::widget([
+			// 	'model' => $model,
+			// 	'attribute' => 'start_date',
+			// 	'template' => '{addon}{input}',
+			// 	'clientOptions' => [
+			// 		'autoclose' => true,
+			// 		'format' => 'yyyy-m-d'
+			// 	]
+			// ]);
+		?>
 
 		<div class="form-group">
 				<?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
